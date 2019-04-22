@@ -1,1 +1,1 @@
-worker: python botlequit
+worker: python botlequit.py
