@@ -18,6 +18,7 @@ from vk_api.utils import sjson_dumps
 # vk_session.auth()
 token ='token'
 vk_session = vk_api.VkApi(token="0c9fb4a1d62e25bc3c56dde20ea81b7fc3760f0fb21c2fda6f07e50bb8d792fa10c818fce7c8d08bb17b3")
+bot.run(str(token))
 longpoll = VkLongPoll(vk_session)
 
 
