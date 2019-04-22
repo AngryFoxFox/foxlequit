@@ -4,6 +4,7 @@ sys.path.insert(0, '../')
 
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
+from boto.s3.connection import S3Connection
 import vk_api
 from datetime import datetime
 import random
@@ -18,7 +19,10 @@ from vk_api.utils import sjson_dumps
 # vk_session.auth()
 token ='token'
 vk_session = vk_api.VkApi(token="0c9fb4a1d62e25bc3c56dde20ea81b7fc3760f0fb21c2fda6f07e50bb8d792fa10c818fce7c8d08bb17b3")
-bot.run(str(desdfs))
+token = S3Connection(os.environ['0c9fb4a1d62e25bc3c56dde20ea81b7fc3760f0fb21c2fda6f07e50bb8d792fa10c818fce7c8d08bb17b3'])
+bot = vkbot.bot(token)
+
+
 longpoll = VkLongPoll(vk_session)
 
 
