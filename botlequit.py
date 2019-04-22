@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 import sys
 sys.path.insert(0, '../')
 
@@ -9,32 +8,34 @@ import vk_api
 from datetime import datetime
 import random
 import time
-import get_pictures
+import json
+from vk_api.utils import sjson_dumps
 
 #login, password='login','password'
 # vk_session = vk_api.VkApi(login, password)
+#edcfc72412b0b9cd52974cba1cba97315d3eb820406044d3dda58dd66299745f6e37f4e1fc576b09c46c0 
+#71ab264bb90f343cd9f54cd737818e618c91feb797c1d8b3ac10753f31037f6717b839e4e6b2fa918f0ab test
 # vk_session.auth()
-
+token ='token'
 vk_session = vk_api.VkApi(token="0c9fb4a1d62e25bc3c56dde20ea81b7fc3760f0fb21c2fda6f07e50bb8d792fa10c818fce7c8d08bb17b3")
 
-
 longpoll = VkLongPoll(vk_session)
+
 
 
 def create_keyboard(response):
     keyboard = VkKeyboard(one_time=False)
 
-    if response == 'тест':
+    if response == 'начать':
+        'начать'.replace('н', 'Н')
 
-        keyboard.add_button('Белая кнопка', color=VkKeyboardColor.DEFAULT)
-        keyboard.add_button('Зелёная кнопка', color=VkKeyboardColor.POSITIVE)
+        keyboard.add_button('Оплата и доставка', color=VkKeyboardColor.DEFAULT)
+        keyboard.add_button('Выбрать размер', color=VkKeyboardColor.POSITIVE)
 
         keyboard.add_line()  # Переход на вторую строку
-        keyboard.add_button('Красная кнопка', color=VkKeyboardColor.NEGATIVE)
 
-        keyboard.add_line()
-        keyboard.add_button('Синяя кнопка', color=VkKeyboardColor.PRIMARY)
-        keyboard.add_button('Привет', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_button('Оформить заказ', color=VkKeyboardColor.PRIMARY)
+        keyboard.add_button('Помощь', color=VkKeyboardColor.PRIMARY)
 
 
     elif response == 'привет':
@@ -58,30 +59,32 @@ while True:
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW:
             print('Сообщение пришло в: ' + str(datetime.strftime(datetime.now(), "%H:%M:%S")))
-            print('Текст сообщения: ' + str(event.text))
+            print(ascii ('Текст сообщения: ' + str (event.text)))
             print(event.user_id)
             response = event.text.lower()
             keyboard = create_keyboard(response)
 
             if event.from_user and not event.from_me:
-                if response == "котики":
-                    attachment = get_pictures.get(vk_session, -130670107, session_api)
-                    send_message(vk_session, 'user_id', event.user_id, message='Держи котиков!', attachment=attachment, keyboard=keyboard)
-                elif response == "привет":
-                    send_message(vk_session, 'user_id', event.user_id, message='Нажми на кнопку, чтобы получить список команд',keyboard=keyboard)
-                elif response == "тест":
-                    send_message(vk_session, 'user_id', event.user_id, message= 'Тестовые команды',keyboard=keyboard)
-                elif response=='команды':
-                    send_message(vk_session, 'user_id', event.user_id, message='Список команд бота: \n \n 1)Команда1 \n 2)Команда2')
+                if response == "Начать":
+                    send_message(vk_session, 'user_id', event.user_id, message='Выбери нужное', keyboard=keyboard)
 
-                elif response=='закрыть':
-                    send_message(vk_session, 'user_id', event.user_id, message='Закрыть',keyboard=keyboard)
+                elif response == "начать":
+                    send_message(vk_session, 'user_id', event.user_id, message= 'Выбери нужное',keyboard=keyboard)
+                    
+                          
+                elif response == "оплата и доставка":
+                    send_message(vk_session, 'user_id', event.user_id, message='Доставка осуществляется по всей России, стоимость доставки зависит от вашего региона. Оплатить заказ можно следующими способами: Перевод на карту Сбербанк, QIWI кошелек или используя "Товары ВКонтакте"')
+
+                elif response == "помощь":
+                    send_message(vk_session, 'user_id', event.user_id, message='Пиши сюда свой вопрос. Скоро мы ответим на него')
+
+                elif response == "выбрать размер":
+                    send_message (vk_session, 'user_id', event.user_id, message='Напиши свой рост и вес, мы поможем выбрать тебе размер')
+                    
+                elif response == "оформить заказ":
+                    send_message(vk_session, 'user_id', event.user_id, message= 'Для оформления заказа напиши 1.Что хочешь купить 2.Полный адрес 3.Индекс 4.Размер или используй "Магазин ВКонтакте"')
+                    
 
 
 
-            elif event.from_chat :
-                if response == "котики":
-                    attachment = get_pictures.get(vk_session, -130670107, session_api)
-                    print(attachment)
-                    send_message(vk_session, 'chat_id', event.chat_id, message='Держите котиков!', attachment= attachment)
             print('-' * 30)
